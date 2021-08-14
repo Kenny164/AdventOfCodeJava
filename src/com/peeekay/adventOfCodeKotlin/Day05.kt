@@ -3,8 +3,7 @@ package com.peeekay.adventOfCodeKotlin
 class Day05 : AOCPuzzle(5) {
     private val rawInput = resourceAsList()
 
-    private fun strToSeatId(boardingNum: String): Int {
-        return boardingNum
+    private fun strToSeatId(boardingNum: String): Int = boardingNum
             .map {
             when (it) {
                 'F', 'L' -> '0'
@@ -12,12 +11,10 @@ class Day05 : AOCPuzzle(5) {
                 else -> it
             }}
             .joinToString("").toInt(2)
-    }
 
     private val seats = rawInput.map { strToSeatId(it) }
 
     override fun partOne(): Any? {
-        //return strToSeatId("BFFFBBFRRR")
         return seats.maxOrNull()
     }
 
@@ -25,8 +22,7 @@ class Day05 : AOCPuzzle(5) {
         return seats
             .sorted()
             .zipWithNext()
-            .filter {it.first + 1 != it.second}
-            .first().first + 1
+            .first { it.first + 1 != it.second }.first + 1
     }
 
 
