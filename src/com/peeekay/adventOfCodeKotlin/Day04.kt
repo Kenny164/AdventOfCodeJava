@@ -18,7 +18,34 @@ class Day04 : AOCPuzzle(4) {
     }
 
     override fun partTwo(): Any? {
-        TODO("Not yet implemented")
+        fun String.numLength(len: Int): Boolean {
+            return this.length == len && this.all { it.isDigit() }
+        }
+
+        val rules: Map<String, (String) -> Boolean> = mapOf(
+            "byr" to { it.numLength(4) && it.toInt() in 1920..2002 },
+            "iyr" to { it.numLength(4) && it.toInt() in 2010..2020 },
+            "eyr" to { it.numLength(4) && it.toInt() in 2020..2030 },
+            "hgt" to {
+                when (it.takeLast(2)) {
+                    "cm" -> it.removeSuffix("cm").toInt() in 150..193
+                    "in" -> it.removeSuffix("in").toInt() in 59..76
+                    else -> false
+                }
+            },
+            "hcl" to { it matches """#[0-9a-f]{6}""".toRegex() },
+            "ecl" to { it in listOf("amb", "blu", "brn", "gry", "grn", "hzl", "oth") },
+            "pid" to { it.numLength(9) }
+        )
+
+        return passports
+            .count {
+                rules.all { (k, validateFn) ->
+                    it[k]?.let { it1 -> validateFn(it1) } ?: false
+                }
+        }
     }
 
 }
+
+
