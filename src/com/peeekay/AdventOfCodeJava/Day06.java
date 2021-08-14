@@ -1,6 +1,7 @@
 package com.peeekay.AdventOfCodeJava;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Day06 extends AOCPuzzle{
@@ -21,6 +22,14 @@ public class Day06 extends AOCPuzzle{
 
     @Override
     public Object part2() {
-        return null;
+        int total = 0;
+        for(String group : groups) {
+            final String[] persons = group.split("\r\n");
+            final HashMap<Character, Integer> charCount = new HashMap<>();
+            for (char c : group.toCharArray()) charCount.put(c, charCount.containsKey(c) ? charCount.get(c) + 1 : 1);
+
+            total += charCount.values().stream().mapToInt(count -> count).map(count -> count == persons.length ? 1 : 0).sum();
+        }
+        return total;
     }
 }
