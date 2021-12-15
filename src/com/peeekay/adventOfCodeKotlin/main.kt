@@ -1,7 +1,7 @@
 package com.peeekay.adventOfCodeKotlin
 
 fun main() {
-    val day = Day07()
+    val day = Day08()
     println(day.partOne())
     println(day.partTwo())
 }

@@ -46,11 +46,11 @@ dotted black bags contain no other bags.""".lines()*/
     }
 
     override fun partTwo(): Any? {
-        fun bagsContainedIn(bag:String): Int {
+        fun bagsContainedIn(bag: String): Int {
             val selectedBag = bags.first{ it.name == bag }
-            val sum = selectedBag.children.map { (n, innerBag) ->
+            val sum = selectedBag.children.sumOf { (n, innerBag) ->
                 n + (n * bagsContainedIn(innerBag))
-            }.sum()
+            }
             return sum
         }
         return bagsContainedIn("shiny gold")
