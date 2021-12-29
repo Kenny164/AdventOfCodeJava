@@ -1,4 +1,4 @@
-package com.peeekay.AdventOfCodeJava;
+package com.peeekay.aoc2020.AdventOfCodeJava;
 
 import java.io.File;
 import java.io.IOException;

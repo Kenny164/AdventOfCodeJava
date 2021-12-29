@@ -1,4 +1,4 @@
-package com.peeekay.adventOfCodeKotlin
+package com.peeekay.aoc2020.adventOfCodeKotlin
 
 class Day02 : AOCPuzzle(2) {
     private val passwords = resourceAsList().map(Password.Companion::parse)

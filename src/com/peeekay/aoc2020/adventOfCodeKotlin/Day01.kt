@@ -1,4 +1,4 @@
-package com.peeekay.adventOfCodeKotlin
+package com.peeekay.aoc2020.adventOfCodeKotlin
 
 class Day01 : AOCPuzzle(1){
     private val numbers = resourceAsListOfInt()

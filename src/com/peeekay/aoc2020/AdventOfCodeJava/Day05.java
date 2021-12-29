@@ -1,4 +1,4 @@
-package com.peeekay.AdventOfCodeJava;
+package com.peeekay.aoc2020.AdventOfCodeJava;
 
 import java.util.HashSet;
 import java.util.Set;

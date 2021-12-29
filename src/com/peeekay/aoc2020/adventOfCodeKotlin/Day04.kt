@@ -1,4 +1,4 @@
-package com.peeekay.adventOfCodeKotlin
+package com.peeekay.aoc2020.adventOfCodeKotlin
 
 class Day04 : AOCPuzzle(4) {
     private val newLine = System.lineSeparator()

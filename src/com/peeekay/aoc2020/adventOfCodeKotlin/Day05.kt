@@ -1,4 +1,4 @@
-package com.peeekay.adventOfCodeKotlin
+package com.peeekay.aoc2020.adventOfCodeKotlin
 
 class Day05 : AOCPuzzle(5) {
     private val rawInput = resourceAsList()

@@ -1,4 +1,4 @@
-package com.peeekay.AdventOfCodeJava;
+package com.peeekay.aoc2020.AdventOfCodeJava;
 
 public class Day01 extends AOCPuzzle {
     final static Integer GOAL = 2020;
