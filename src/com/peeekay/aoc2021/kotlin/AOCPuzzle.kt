@@ -5,8 +5,13 @@ import java.net.URI
 
 abstract class AOCPuzzle(private val dayNumber: Int) {
 
-    private fun resourceURI(): URI =
-            javaClass.classLoader.getResource("input_2021/day"+dayNumber.toString().padStart(2, '0')+".txt")?.toURI() ?: throw IllegalArgumentException("Cannot find Resource: $this")
+    private fun resourceURI(isTest: Boolean = false): URI =
+        when (isTest) {
+            true -> javaClass.classLoader.getResource("input_2021/day" + dayNumber.toString().padStart(2, '0') + "_test.txt")
+                ?.toURI() ?: throw IllegalArgumentException("Cannot find Resource: $this")
+            false -> javaClass.classLoader.getResource("input_2021/day" + dayNumber.toString().padStart(2, '0') + ".txt")
+                ?.toURI() ?: throw IllegalArgumentException("Cannot find Resource: $this")
+        }
 
     fun resourceAsString(delimiter: String = ""): String =
             resourceAsList().reduce { a, b -> "$a$delimiter$b" }
@@ -19,6 +24,9 @@ abstract class AOCPuzzle(private val dayNumber: Int) {
 
     fun resourceAsListOfInt(): List<Int> =
             resourceAsList().map { it.toInt() }
+
+    fun resourceAsList_Test(): List<String> =
+        File(resourceURI(true)).readLines()
 
     abstract fun partOne(): Any?
     abstract fun partTwo(): Any?

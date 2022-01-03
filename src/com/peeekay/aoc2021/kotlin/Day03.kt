@@ -3,18 +3,7 @@ package com.peeekay.aoc2021.kotlin
 class Day03 : AOCPuzzle(3) {
     private val input: List<String> = resourceAsList()
 
-    private val input_test: List<String> = """00100
-11110
-10110
-10111
-10101
-01111
-00111
-11100
-10000
-11001
-00010
-01010""".split("\n")
+    private val input_test: List<String> = resourceAsList_Test()
 
     enum class RatingType {
         OXYGEN,
