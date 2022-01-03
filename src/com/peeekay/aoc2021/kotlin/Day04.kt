@@ -31,7 +31,14 @@ class Day04 : AOCPuzzle(4) {
     }
 
     override fun partTwo(): Any? {
-        TODO("Not yet implemented")
+        val ( draws, boards ) = parsedInput(input)
+        val drawn = draws.toMutableSet()
+        return draws.reversed().firstNotNullOf { draw ->
+            drawn -= draw
+            boards.firstOrNull { !it.isWinner(drawn) }?.let { winner ->
+                draw * (winner.sumUnmarked(drawn) - draw)
+            }
+        }
     }
 
     private fun BingoBoard.isWinner(draws: Set<Int>) =
