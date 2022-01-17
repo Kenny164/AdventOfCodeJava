@@ -28,6 +28,9 @@ abstract class AOCPuzzle(private val dayNumber: Int) {
     fun resourceAsList_Test(): List<String> =
         File(resourceURI(true)).readLines()
 
+    fun resourceAsString_Test(): String =
+        File(resourceURI(true)).readText()
+
     abstract fun partOne(): Any?
     abstract fun partTwo(): Any?
 }
