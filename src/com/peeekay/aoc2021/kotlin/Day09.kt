@@ -2,7 +2,7 @@ package com.peeekay.aoc2021.kotlin
 
 class Day09 : AOCPuzzle(9) {
     private val caves: List<IntArray> =
-        resourceAsList_Test().map { row ->
+        resourceAsList().map { row ->
             row.map { it.digitToInt() }.toIntArray()
         }
 
@@ -29,17 +29,38 @@ class Day09 : AOCPuzzle(9) {
                     point
                         .neighbors()
                         .filter { it in caves }
-                        .map {caves [it] }
-                        .all {col < it}}
+                        .map { caves[it] }
+                        .all { col < it }
                 }
-            }.filterNotNull()
+            }
+        }.filterNotNull()
 
     override fun partOne(): Any? {
         return caves.getLowPoints().sumOf { caves[it] + 1 }
     }
 
     override fun partTwo(): Any? {
-        TODO("Not yet implemented")
+        return caves.getLowPoints()
+            .map { getBasin(it).size }
+            .sorted()
+            .takeLast(3)
+            .reduce { a, b -> a * b}
+    }
+
+    private fun getBasin(point: Point2d): List<Point2d> {
+        val visited = mutableSetOf(point)
+        val queue = mutableListOf(point)
+
+        while (queue.isNotEmpty()) queue.removeFirst()
+            .neighbors()
+            .filter { it in caves }
+            .filterNot { it in visited }
+            .filterNot { caves[it] == 9 }
+            .let {
+                visited.addAll(it)
+                queue.addAll(it)
+            }
+        return visited.toList()
     }
 
 }
