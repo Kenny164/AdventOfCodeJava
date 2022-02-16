@@ -16,14 +16,14 @@ class Day10 : AOCPuzzle(10) {
         return input.map { it.firstBadCharOrNull() }
             .groupingBy { it }.eachCount()
             .map { (char, count) ->
-            errorPoints.getOrDefault(char, 0) * count }.sum()
+            errorPoints.getOrDefault(char, 0).toLong() * count }.sum()
     }
 
     private fun String.firstBadCharOrNull(): Char? {
         val stack = ArrayDeque<Char>()
         this.forEach { c ->
             if (c in openToCloseMap.keys) stack.addLast(c)
-            else if (stack.isNotEmpty() && stack.removeLast() != c) return c
+            else if (stack.isNotEmpty() && openToCloseMap[stack.removeLast()] != c) return c
         }
         return null
     }
