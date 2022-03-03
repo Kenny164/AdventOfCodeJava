@@ -1,7 +1,7 @@
 package com.peeekay.aoc2021.kotlin
 
 fun main() {
-    val day = Day10()
+    val day = Day11()
     println(day.partOne())
     println(day.partTwo())
 }
