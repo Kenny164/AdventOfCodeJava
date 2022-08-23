@@ -43,7 +43,16 @@ class Day16 : AOCPuzzle(16){
             (1..subPacketCount).map { subPackets.add(parsePacketsRecurse(inp))}
         }
 
-        return packetType.toLong()
+        return when (packetType){
+            0 -> subPackets.sum()
+            1 -> subPackets.fold(1L, Long::times)
+            2 -> subPackets.minOf { it }
+            3 -> subPackets.maxOf { it }
+            5 -> if (subPackets[0] > subPackets[1]) 1L else 0L
+            6 -> if (subPackets[0] < subPackets[1]) 1L else 0L
+            7 -> if (subPackets[0] == subPackets[1]) 1L else 0L
+            else -> error("unknown operation: $packetType")
+        }
     }
 
     override fun partOne(): Any? {
@@ -52,6 +61,6 @@ class Day16 : AOCPuzzle(16){
     }
 
     override fun partTwo(): Any? {
-        return 0
+        return parsePacketsRecurse(inputToBinIterator(rawInput))
     }
 }
