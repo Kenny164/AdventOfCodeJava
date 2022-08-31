@@ -29,8 +29,8 @@ internal class Day17Test {
         assertTrue(testTarget.beyondTargetArea(21,-12))
         assertTrue(testTarget.beyondTargetArea(35,-8))
         assertTrue(testTarget.beyondTargetArea(37,-22))
-        assertFalse(testTarget.inTargetArea(18,-8))
-        assertFalse(testTarget.inTargetArea(21,3))
+        assertFalse(testTarget.beyondTargetArea(18,-8))
+        assertFalse(testTarget.beyondTargetArea(21,3))
     }
 
 }
