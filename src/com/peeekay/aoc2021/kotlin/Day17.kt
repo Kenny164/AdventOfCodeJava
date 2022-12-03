@@ -16,16 +16,35 @@ class Day17 : AOCPuzzle(17) {
             fun of(inp: String): Target? =
                 targetRegex.matchEntire(inp)
                     ?.destructured
-                    ?.let{ (a,b,c,d) ->
-                        Target(a.toInt()..b.toInt(),c.toInt()..d.toInt())
+                    ?.let { (a, b, c, d) ->
+                        Target(a.toInt()..b.toInt(), c.toInt()..d.toInt())
                     }
         }
     }
 
+    data class Point2d(val x: Int, val y: Int)
+
+    data class Probe(val position: Point2d = Point2d(0, 0), val velocity: Point2d) {
+        companion object {
+            fun step(from: Probe): Probe = Probe(
+                Point2d(
+                    from.position.x + from.velocity.x,
+                    from.position.y + from.velocity.y
+                ),
+                Point2d(
+                    (if (from.velocity.x > 0) from.velocity.x - 1 else 0),
+                    from.velocity.y - 1
+                )
+            )
+        }
+    }
 
 
     override fun partOne(): Any? {
-        return Target.of("target area: x=20..30, y=-10..-5")
+        val target = Target.of("target area: x=20..30, y=-10..-5")
+        val probe = Probe(Point2d(0, 0), Point2d(6, 9))
+
+        return Probe.step(probe)
     }
 
     override fun partTwo(): Any? {
