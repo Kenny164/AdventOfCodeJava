@@ -12,7 +12,7 @@ class Day01(val isTest: Boolean = false) : AOCPuzzle(1, isTest){
     }
 
     override fun partTwo(): Any? {
-        TODO("Not yet implemented")
+        return inp.map { it.sum() }.sortedDescending().take(3).sum()
     }
 
 }
