@@ -13,17 +13,20 @@ abstract class AOCPuzzle(private val dayNumber: Int, private val isTest: Boolean
                 ?.toURI() ?: throw IllegalArgumentException("Cannot find Resource: $this")
         }
 
+    fun resourceAsText(): String =
+        File(resourceURI()).readText()
+
+    fun resourceAsSplitText(splitOn: String): List<String> =
+        resourceAsText().split(splitOn)
+
+    fun resourceAsList(): List<String> =
+        File(resourceURI()).readLines()
+
     fun resourceAsString(delimiter: String = ""): String =
             resourceAsList().reduce { a, b -> "$a$delimiter$b" }
 
-    fun resourceAsText(): String =
-            File(resourceURI()).readText()
-
-    fun resourceAsList(): List<String> =
-            File(resourceURI()).readLines()
-
     fun resourceAsListOfInt(): List<Int> =
-            resourceAsList().map { it.toInt() }
+        resourceAsList().map { it.toInt() }
 
     abstract fun partOne(): Any?
     abstract fun partTwo(): Any?

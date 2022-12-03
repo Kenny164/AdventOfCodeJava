@@ -1,9 +1,14 @@
 package com.peeekay.aoc2022.kotlin
 
 class Day01(val isTest: Boolean = false) : AOCPuzzle(1, isTest){
+    private val inp: List<List<Int>> by lazy {
+        resourceAsSplitText("\r\n\r\n")
+            .map { elf_group ->
+                elf_group.lines().map { calorie ->
+                    calorie.toInt() } } }
+
     override fun partOne(): Any? {
-        val inp = resourceAsList()
-        return inp.first()
+        return inp.maxOf { it.sum() }
     }
 
     override fun partTwo(): Any? {

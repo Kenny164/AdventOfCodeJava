@@ -28,7 +28,14 @@ internal class Day01Test {
         val day = Day01(isTest = true)
         val answer = day.partOne()
 
-        assertEquals("1000", answer)
+        assertEquals(24000, answer)
     }
 
+    @Test
+    fun `Part2 with test data`() {
+        val day = Day01(isTest = true)
+        val answer = day.partTwo()
+
+        assertEquals(45000, answer)
+    }
 }
