@@ -10,7 +10,7 @@ internal class Day01Test {
     @Test
     fun `Able to run against test data`() {
         val day = Day01(isTest = true)
-        val answer = day.partOne()
+        val answer = day.resourceAsList().first()
 
         assertEquals("1000", answer)
     }
@@ -18,17 +18,17 @@ internal class Day01Test {
     @Test
     fun `Able to run against real data`() {
         val day = Day01()
-        val answer = day.partOne()
+        val answer = day.resourceAsList().first()
 
         assertEquals("13399", answer)
     }
 
     @Test
     fun `Part1 with test data`() {
-        val day = Day01()
+        val day = Day01(isTest = true)
         val answer = day.partOne()
 
-        assertEquals("13399", answer)
+        assertEquals("1000", answer)
     }
 
 }
