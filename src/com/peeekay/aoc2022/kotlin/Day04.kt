@@ -13,7 +13,10 @@ class Day04(isTest: Boolean) : AOCPuzzle(4, isTest) {
     }
 
     override fun partTwo(): Any? {
-        TODO("Not yet implemented")
+        return inp.count {
+            val (a, b, c, d) = it
+            ((a..b).intersect((c .. d))).any()
+        }
     }
 
 }
