@@ -24,10 +24,23 @@ class Day05(isTest: Boolean) : AOCPuzzle(5, isTest) {
     }
 
     private fun List<ArrayDeque<Char>>.applyMoves(moves: List<Triple<Int, Int, Int>>): List<ArrayDeque<Char>> {
+        val copyOfStacks = this.map { ArrayDeque(it) }
         moves.forEach { move ->
-            repeat(move.first) { this[move.third - 1].addLast(this[move.second - 1].removeLast()) }
+            repeat(move.first) { copyOfStacks[move.third - 1].addLast(copyOfStacks[move.second - 1].removeLast()) }
         }
-        return this
+        return copyOfStacks
+    }
+
+    private fun List<ArrayDeque<Char>>.applyMovesInBulk(moves: List<Triple<Int, Int, Int>>): List<ArrayDeque<Char>> {
+        val copyOfStacks = this.map { ArrayDeque(it) }
+        moves.forEach { move ->
+            val lifted = copyOfStacks[move.second - 1].takeLast(move.first)
+            repeat(move.first) { copyOfStacks[move.second - 1].removeLast() }
+            lifted.forEach {
+                copyOfStacks[move.third - 1].addLast(it)
+            }
+        }
+        return copyOfStacks
     }
 
     override fun partOne(): Any? {
@@ -35,7 +48,7 @@ class Day05(isTest: Boolean) : AOCPuzzle(5, isTest) {
     }
 
     override fun partTwo(): Any? {
-        return inpMoves
+        return inpStacks.applyMovesInBulk(inpMoves).getTops()
     }
 
 }
