@@ -8,6 +8,6 @@ class Day06(val isTest: Boolean = false) : AOCPuzzle(6, isTest) {
     }
 
     override fun partTwo(): Any? {
-        TODO("Not yet implemented")
+        return inp.windowedSequence(14, 1).withIndex().first { it.value.toSet().size == 14 }.let { it.index + 14 }
     }
 }
