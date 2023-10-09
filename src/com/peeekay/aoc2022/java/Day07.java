@@ -42,17 +42,6 @@ public class Day07 extends AOCPuzzle {
             this.size = size;
         }
 
-        public static long getTotalSizeWithLimitRec(Node node, long limit) {
-            long total = 0L;
-            for (Node c : node.children) {
-                if (c.size <= limit && c.size > 0L) {
-                    total += c.size;
-                }
-                total += Node.getTotalSizeWithLimitRec(c, limit);
-            }
-            return total;
-        }
-
         public static long getTotalSize(Node node) {
             long total = 0L;
             for (Node c : node.children) {
