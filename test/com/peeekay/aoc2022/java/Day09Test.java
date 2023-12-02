@@ -2,6 +2,9 @@ package com.peeekay.aoc2022.java;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class Day09Test {
@@ -14,6 +17,16 @@ class Day09Test {
 
     @Test
     void partTwo() {
-        assertEquals(0, day.partTwo());
+        List<String> moreTestData = Arrays.asList("""
+R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20
+""".split("\n"));
+        assertEquals(36, day.partTwo(moreTestData));
     }
 }

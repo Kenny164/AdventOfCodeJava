@@ -4,6 +4,7 @@ import com.peeekay.aoc2022.kotlin.AOCPuzzle;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Day09 extends AOCPuzzle {
     private final List<String> inp = resourceAsList();
@@ -58,6 +59,10 @@ public class Day09 extends AOCPuzzle {
     @Nullable
     @Override
     public Object partOne() {
+        return partOne(inp);
+    }
+
+    public int partOne(List<String> input) {
         Point head = new Point(0, 0);
         Point tail = new Point(0, 0);
         Set<Point> tailVisits = new HashSet<>();
@@ -76,6 +81,26 @@ public class Day09 extends AOCPuzzle {
     @Nullable
     @Override
     public Object partTwo() {
-        return 0;
+        return partTwo(inp);
+    }
+
+    public int partTwo(List<String> input) {
+        Point head = new Point(0, 0);
+        List<Point> tails = new ArrayList<>(IntStream.range(0, 10).mapToObj(i -> new Point(0, 0)).toList());
+        Set<Point> tailVisits = new HashSet<>();
+        List<Point> instructions = parseInp(input);
+        for (Point instruction : instructions){
+            head = head.move(instruction);
+            tails.set(0, head);
+            for (int j = 1; j < tails.size(); j++) {
+                Point prev = tails.get(j - 1);
+                Point cur = tails.get(j);
+                if (!prev.touches(cur)) {
+                    tails.set(j, cur.follow(prev));
+                }
+            }
+            tailVisits.add(tails.get(9));
+        }
+        return tailVisits.size();
     }
 }
