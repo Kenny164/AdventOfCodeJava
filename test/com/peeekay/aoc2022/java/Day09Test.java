@@ -27,6 +27,6 @@ D 10
 L 25
 U 20
 """.split("\n"));
-        assertEquals(36, day.partTwo(moreTestData));
+        assertEquals(36, day.solve(moreTestData, 9));
     }
 }
