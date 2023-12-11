@@ -13,13 +13,14 @@ public abstract class AOCPuzzle {
     private int part = 1;
     private long timerStart;
     private final boolean isTest;
+    private List<String> inp;
 
     public AOCPuzzle(int day, boolean isTest) {
         this.dayNum = day;
         this.isTest = isTest;
         timerStart = System.nanoTime();
-        solve();
-        printParts();
+        //solve();
+        //printParts();
     }
 
     public abstract Object part1();
@@ -39,7 +40,7 @@ public abstract class AOCPuzzle {
         return Objects.requireNonNull(AOCPuzzle.class.getClassLoader().getResource(path)).getPath();
     }
 
-    protected String getResourceAsString() {
+    String getResourceAsString() {
         try {
             return FileUtils.readFileToString(new File(resourceURI()), "UTF-8");
         } catch (IOException e) {
@@ -47,11 +48,11 @@ public abstract class AOCPuzzle {
         }
     }
 
-    protected List<String> resourceAsSplitText (String splitOn) {
+    List<String> resourceAsSplitText (String splitOn) {
         return List.of(getResourceAsString().split(splitOn));
     }
 
-    protected List<String> resourceAsList() {
+    List<String> resourceAsList() {
         return resourceAsSplitText(System.lineSeparator());
     }
 
@@ -69,4 +70,11 @@ public abstract class AOCPuzzle {
         part++;
     }
 
+    public void setInp(List<String> puzzleInput) {
+        this.inp = puzzleInput;
+    }
+
+    public List<String> getInp() {
+        return inp;
+    }
 }
