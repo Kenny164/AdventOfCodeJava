@@ -1,9 +1,7 @@
 package com.peeekay.aoc2023.java;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public class Day02 extends AOCPuzzle {
     Object _part1, _part2;
@@ -47,29 +45,23 @@ public class Day02 extends AOCPuzzle {
             games.put(gameNumber, sets);
         }
 
-        List<Integer> result = new ArrayList<>();
-        for (var game : games.entrySet()) {
-            var sets = game.getValue();
-            boolean isPossible = true;
-            for (var set : sets) {
-                if (set[0] > 12 || set[1] > 13 || set[2] > 14) {
-                    isPossible = false;
-                    break;
-                }
+        Set<Integer> possibleGames = new HashSet<>();
+        for (Map.Entry<Integer, List<int[]>> game : games.entrySet()) {
+            List<int[]> sets = game.getValue();
+            long possibleSetCount = sets.stream().filter(set -> set[0] <= 12 && set[1] <= 13 && set[2] <= 14).count();
+            if (possibleSetCount == sets.size()) {
+                possibleGames.add(game.getKey());
             }
-            if (isPossible) result.add(game.getKey());
         }
 
-        _part1 = result.stream().reduce(Integer::sum).orElse(0);
-
-//        _part1 = games.entrySet().stream()
-//                .flatMap(game -> {
-//                    var sets = game.getValue();
-//                    return IntStream.range(0, sets.get(0).length)
-//                            .mapToObj(i-> sets.stream().mapToInt(row -> row[i]))
-//                            .mapToInt(col -> col.max().orElse(0))
-//                            .mapToObj(v -> Map.entry(game.getKey(), v));
-//                });
-        _part2 = null;
+        _part1 = possibleGames.stream().mapToInt(Integer::intValue).sum();
+        _part2 = games.values().stream()
+                .map(game -> IntStream.range(0, 3)
+                        .map(i -> game.stream()
+                                .mapToInt(rgb -> rgb[i])
+                                .max().orElse(0))
+                        .toArray())
+                .mapToInt(rgb -> rgb[0] * rgb[1] * rgb[2])
+                .sum();
     }
 }

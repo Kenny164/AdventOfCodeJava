@@ -18,7 +18,7 @@ class Day02Test {
     @Test
     void part2() {
         day.solve();
-        assertEquals(null, day.part2());
+        assertEquals(2286, day.part2());
     }
 
 }
