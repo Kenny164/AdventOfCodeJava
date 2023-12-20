@@ -1,6 +1,9 @@
 package com.peeekay.aoc2023.java;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 public class Day02 extends AOCPuzzle {
@@ -45,16 +48,17 @@ public class Day02 extends AOCPuzzle {
             games.put(gameNumber, sets);
         }
 
-        Set<Integer> possibleGames = new HashSet<>();
-        for (Map.Entry<Integer, List<int[]>> game : games.entrySet()) {
-            List<int[]> sets = game.getValue();
-            long possibleSetCount = sets.stream().filter(set -> set[0] <= 12 && set[1] <= 13 && set[2] <= 14).count();
-            if (possibleSetCount == sets.size()) {
-                possibleGames.add(game.getKey());
-            }
-        }
+        _part1 = games.entrySet().stream()
+                .filter(g -> {
+                    var rgb = IntStream.range(0, 3)
+                            .map(i -> g.getValue().stream()
+                                    .mapToInt(j -> j[i])
+                                    .max().orElse(0))
+                            .toArray();
+                    return (rgb[0] <= 12 && rgb[1] <= 13 && rgb[2] <= 14);})
+                .mapToInt(Map.Entry::getKey)
+                .sum();
 
-        _part1 = possibleGames.stream().mapToInt(Integer::intValue).sum();
         _part2 = games.values().stream()
                 .map(game -> IntStream.range(0, 3)
                         .map(i -> game.stream()
