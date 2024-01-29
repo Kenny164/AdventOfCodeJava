@@ -19,18 +19,18 @@ public class Day03 extends AOCPuzzle {
         return _part2;
     }
 
-    record Point2D(int x, int y){
+    record Point2D(int x, int y) {
         boolean isNeighbourOf(Point2D p) {
-            return (Math.abs(x - p.x) <= 1 && Math.abs(y - p.y) <=1);
+            return (Math.abs(x - p.x) <= 1 && Math.abs(y - p.y) <= 1);
         }
     }
 
-    record Cell(List<Point2D> points, int cellValue){
-        boolean hasNeighboursOf (Point2D p) {
+    record Cell(List<Point2D> points, int cellValue) {
+        boolean hasNeighboursOf(Point2D p) {
             return points.stream().anyMatch(p::isNeighbourOf);
         }
 
-        boolean hasNeighboursOf (Set<Point2D> setPoints) {
+        boolean hasNeighboursOf(Set<Point2D> setPoints) {
             for (var p : setPoints) {
                 if (this.hasNeighboursOf(p)) {
                     return true;
@@ -49,7 +49,7 @@ public class Day03 extends AOCPuzzle {
         Map<Point2D, Character> symbols = new HashMap<>();
         StringBuilder sb = new StringBuilder();
         List<Point2D> point2ds = new ArrayList<>();
-        for (int r = 0; r < inp.size(); ++r ) {
+        for (int r = 0; r < inp.size(); ++r) {
             if (!sb.isEmpty() && !point2ds.isEmpty()) {
                 int fullCellValue = Integer.parseInt(sb.toString());
                 Cell cell = new Cell(new ArrayList<>(point2ds), fullCellValue);
@@ -78,7 +78,7 @@ public class Day03 extends AOCPuzzle {
                     if (cellVal == '.') {
                         continue;
                     }
-                    symbols.put(new Point2D(c ,r), cellVal);
+                    symbols.put(new Point2D(c, r), cellVal);
                 }
             }
         }
@@ -90,7 +90,26 @@ public class Day03 extends AOCPuzzle {
                 .mapToInt(Cell::cellValue)
                 .sum();
 
-        _part2 = new Point2D(2,0).isNeighbourOf(new Point2D(4,1));
+        var filteredSymbols = symbols.entrySet().stream()
+                .filter(symEntry -> symEntry.getValue() == '*')
+                .map(Map.Entry::getKey)
+                .toList();
+
+        Map<Point2D, Set<Integer>> groupedCells = new HashMap<>();
+        for (var sym : filteredSymbols) {
+            Set<Integer> neighbours = new HashSet<>();
+            for (var p : numbers.values()) {
+                if (p.hasNeighboursOf(sym)){
+                    neighbours.add(p.cellValue());
+                }
+            }
+            groupedCells.put(sym, neighbours);
+        }
+
+        _part2 = groupedCells.values().stream()
+                .filter(set -> set.size() == 2)
+                .mapToLong(set -> set.stream().reduce(1, Math::multiplyExact))
+                .sum();
 
     }
 }
