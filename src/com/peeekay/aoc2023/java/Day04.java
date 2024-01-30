@@ -1,6 +1,8 @@
 package com.peeekay.aoc2023.java;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class Day04 extends AOCPuzzle {
@@ -34,13 +36,7 @@ public class Day04 extends AOCPuzzle {
             return winningNums().stream().filter(ourNums()::contains).count();
         }
 
-        Long score () {
-            long rawScore = countOfMatches();
-            if (rawScore < 1L)
-                return 0L;
-            return (long) Math.pow(2, rawScore - 1);
-        }
-
+        Long score () { return (long) Math.pow(2, countOfMatches() - 1); }
     }
 
     void solve() {
@@ -54,7 +50,15 @@ public class Day04 extends AOCPuzzle {
         }
 
         _part1 = cards.stream().mapToLong(Card::score).sum();
+
+        var counter = new HashMap<Integer, AtomicLong>();
+        cards.forEach(card -> {
+            long copies = counter.computeIfAbsent(card.id(), a -> new AtomicLong(0)).incrementAndGet();
+            for (int i = card.id() + 1; i <= card.id() + card.countOfMatches(); i++) {
+                counter.computeIfAbsent(i, a -> new AtomicLong(0)).addAndGet(copies);
+            }
+        });
+
+        _part2 = counter.values().stream().mapToLong(AtomicLong::get).sum();
     }
-
-
 }
