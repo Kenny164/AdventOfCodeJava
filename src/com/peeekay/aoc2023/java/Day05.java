@@ -1,8 +1,8 @@
 package com.peeekay.aoc2023.java;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Pattern;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Day05 extends AOCPuzzle {
@@ -24,12 +24,11 @@ public class Day05 extends AOCPuzzle {
 
     record SegMap (long dest, long src, long length) {
         long lookup (long lookupVal) {
-            var diff = (src() - lookupVal);
-            return (isInRange(lookupVal)) ? dest() + diff : lookupVal;
+            return lookupVal - src() + dest();
         }
 
         private boolean isInRange (long val) {
-            return ( val < src() && val > src() + length() );
+            return ( src() <= val && val < src() + length() );
         }
 
         public static SegMap from (String segmentStr) {
@@ -56,8 +55,8 @@ public class Day05 extends AOCPuzzle {
         for (var r : mappingSets) {
             for (int si = 0; si < p1.length; si++) {
                 for (var mapping : r) {
-                    if (mapping.src() <= p1[si] && p1[si] < mapping.src() + mapping.length()) {
-                        p1[si] = p1[si] - mapping.src() + mapping.dest();
+                    if (mapping.isInRange(p1[si])) {
+                        p1[si] = mapping.lookup(p1[si]);
                         break;
                     }
                 }
