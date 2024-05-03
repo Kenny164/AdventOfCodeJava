@@ -1,6 +1,9 @@
 package com.peeekay.aoc2023.java;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -74,11 +77,12 @@ public class Day05 extends AOCPuzzle {
                 .toList());
 
         _part1 = Arrays.stream(p1).min().orElse(0L);
-        _part2 = transformSeedRanges(p2Seeds, mappingSets).stream().mapToLong(o -> o.start).min().orElse(0L);
         //_part2 = transformSeedRange(new SeedRange(10, 30), Collections.singleton(new SegMap(15, 100, 25))).toList();
+        //_part2 = transformSeedRanges(p2Seeds, mappingSets).stream().mapToLong(o -> o.start).min().orElse(0L);
+        _part2 = transformSeedRanges_fn(p2Seeds, mappingSets).stream().mapToLong(o -> o.start).min().orElse(0L);
     }
 
-    public static List<SeedRange> transformSeedRanges(List<SeedRange> seeds, List<Set<SegMap>> mappingSets) {
+    List<SeedRange> transformSeedRanges(List<SeedRange> seeds, List<Set<SegMap>> mappingSets) {
         for (Set<SegMap> maps : mappingSets) {
             List<SeedRange> newSeeds = new ArrayList<>();
             for (SeedRange seed : seeds) {
@@ -89,41 +93,47 @@ public class Day05 extends AOCPuzzle {
         return seeds;
     }
 
-    private static Stream<SeedRange> transformSeedRange(SeedRange seed, Set<SegMap> maps) {
+    List<SeedRange> transformSeedRanges_fn(List<SeedRange> seeds, List<Set<SegMap>> mappingSets) {
+        return mappingSets.stream()
+                .reduce(seeds, (currentSeeds, maps) -> currentSeeds.stream()
+                        .flatMap(seed -> transformSeedRange(seed, maps))
+                        .collect(Collectors.toList()), (seeds1, seeds2) -> {
+                    List<SeedRange> combined = new ArrayList<>(seeds1);
+                    combined.addAll(seeds2);
+                    return combined;
+                });
+    }
+
+    Stream<SeedRange> transformSeedRange(SeedRange seed, Set<SegMap> maps) {
         return maps.stream()
                 .filter(map -> isOverlap(seed, map))
                 .findFirst()
                 .map(map -> {
                     List<SeedRange> newSeeds = new ArrayList<>();
-                    System.out.printf("  - overlap found for seed range: %s and map: %s%n", seed, map);
-                    System.out.printf("    - overlapStart: %s, overlapEnd: %s%n", overlapStart(seed, map), overlapEnd(seed, map));
                     // add the left non-overlap
                     if (seed.start < overlapStart(seed, map)) {
-                        System.out.printf("    - adding new seed range (LEFT): (%s, %s)%n", seed.start, overlapStart(seed, map)-1);
-                        newSeeds.add(new SeedRange(seed.start, overlapStart(seed, map)-1));
+                        newSeeds.add(new SeedRange(seed.start, overlapStart(seed, map) - 1));
                     }
                     // add the overlap (with transformation applied)
-                    System.out.printf("    - adding new seed range (OVERLAP): (%s, %s)%n", overlapStart(seed, map) + map.offset, overlapEnd(seed, map) + map.offset);
                     newSeeds.add(new SeedRange(overlapStart(seed, map) + map.offset, overlapEnd(seed, map) + map.offset));
                     // add the right non-overlap
                     if (overlapEnd(seed, map) < seed.end) {
-                        System.out.printf("    - adding new seed range (RIGHT: (%s, %s)%n", overlapEnd(seed, map)+1, seed.end);
-                        newSeeds.add(new SeedRange(overlapEnd(seed, map)+1, seed.end));
+                        newSeeds.add(new SeedRange(overlapEnd(seed, map) + 1, seed.end));
                     }
                     return newSeeds.stream();
                 })
                 .orElseGet(() -> Stream.of(seed)); // Or return the original seed if no overlap
     }
 
-    private static boolean isOverlap(SeedRange seed, SegMap map) {
+    boolean isOverlap(SeedRange seed, SegMap map) {
         return Math.max(seed.start, map.start) < Math.min(seed.end, map.end);
     }
 
-    private static long overlapStart(SeedRange seed, SegMap map) {
+    long overlapStart(SeedRange seed, SegMap map) {
         return Math.max(seed.start, map.start);
     }
 
-    private static long overlapEnd(SeedRange seed, SegMap map) {
+    long overlapEnd(SeedRange seed, SegMap map) {
         return Math.min(seed.end, map.end);
     }
 
