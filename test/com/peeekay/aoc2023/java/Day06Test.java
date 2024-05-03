@@ -12,13 +12,13 @@ class Day06Test {
     @Test
     void part1() {
         day.solve();
-        assertEquals(288, day.part1());
+        assertEquals(288L, day.part1());
     }
 
     @Test
     void part2() {
         day.solve();
-        assertEquals(2286, day.part2());
+        assertEquals(71503L, day.part2());
     }
 
 }

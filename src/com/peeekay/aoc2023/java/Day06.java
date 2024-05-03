@@ -2,7 +2,9 @@ package com.peeekay.aoc2023.java;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 public class Day06 extends AOCPuzzle {
     Object _part1, _part2;
@@ -25,9 +27,6 @@ public class Day06 extends AOCPuzzle {
         solve(this.resourceAsList());
     }
 
-    record Race(int time, int distance) {
-    }
-
     void solve(List<String> inp) {
         var times = Arrays.stream(inp.get(0).split(": +")[1].split("\\s+"))
                 .mapToInt(Integer::parseInt)
@@ -41,17 +40,32 @@ public class Day06 extends AOCPuzzle {
                 .toList();
 
         _part1 = races.stream()
-                .mapToInt(race -> {
-                    var first = IntStream.range(1, race.time)
-                            .filter(hold -> (race.time - hold) * hold > race.distance)
-                            .findFirst().orElse(1) - 1;
-                    var last = IntStream.range(0, race.time)
-                            .map(i -> race.time - i) // reverse
-                            .filter(hold -> (race.time - hold) * hold > race.distance)
-                            .findFirst().orElse(0);
-                    //System.out.printf("Race: %s%n - first: %s, last: %s, total: %s%n", race, first, last, last-first);
-                    return last - first;
-                })
+                .mapToLong(this::applyAsLong)
                 .reduce(1, (acc, race) -> acc * race);
+
+        var correctedRace = new Race(concatFieldsToLong(times), concatFieldsToLong(distances));
+        _part2 = applyAsLong(correctedRace);
     }
+
+    long concatFieldsToLong(List<Integer> times) {
+        return Long.parseLong(times.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining()));
+    }
+
+    long applyAsLong(Race race) {
+        var first = LongStream.range(1, race.time)
+                .filter(hold -> (race.time - hold) * hold > race.distance)
+                .findFirst().orElse(1L) - 1;
+        var last = LongStream.range(0, race.time)
+                .map(i -> race.time - i) // reverse
+                .filter(hold -> (race.time - hold) * hold > race.distance)
+                .findFirst().orElse(0L);
+        return last - first;
+    }
+
+    record Race(long time, long distance) {
+    }
+
+
 }
