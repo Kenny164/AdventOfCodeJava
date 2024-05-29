@@ -28,34 +28,63 @@ public class Day07 extends AOCPuzzle {
     }
 
     void solve(List<String> inp) {
-        List<Hand> hands = inp.stream()
-                .map(Hand::from)
+
+        _part1 = inp.stream()
+                .map(line -> Hand.from(line, false))
                 .sorted(Comparator.comparingLong(Hand::hashRank))
-                .toList();
+                //.peek(h -> System.out.printf("Hand: %s; Encoded Hand: %08X\n", h, h.hashRank))
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(),
+                        hands -> IntStream.range(0, hands.size())
+                                .mapToLong(idx -> (long) (idx + 1) * hands.get(idx).bid())
+                                .sum()
+                ));
 
-        var sortedHands = hands.stream()
-                .map(Hand::bid)
-                .toList();
+        _part2 = inp.stream()
+                .map(line -> Hand.from(line, true))
+                .sorted(Comparator.comparingLong(Hand::hashRank))
+                .peek(h -> System.out.printf("Hand: %s; Encoded Hand: %08X\n", h, h.hashRank))
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(),
+                        hands -> IntStream.range(0, hands.size())
+                                .mapToLong(idx -> (long) (idx + 1) * hands.get(idx).bid())
+                                .sum()
+                ));
 
-        for (Hand hand : hands) {
-            System.out.printf("Hand: %s; Encoded Hand: %08X\n", hand, hand.hashRank);
-        }
-
-        _part1 = IntStream.range(0, sortedHands.size())
-                .mapToLong(idx -> (long) (idx + 1) * sortedHands.get(idx))
-                .sum();
-
-        _part2 = hands;
     }
 
     record Hand(CharSequence hand, int bid, long hashRank) {
-        private static long getRankHash(CharSequence hand) {
-            var translatedHand = hand.chars().mapToObj(Hand.CARD_STRENGTH::get).toList();
-            var counts = translatedHand.stream()
-                    .collect(Collectors.groupingBy(v -> v, Collectors.counting()));
+        private static long getRankHash(CharSequence hand, boolean jokers) {
+            var strengths = (jokers) ? CARD_STRENGTH_JOKERS : CARD_STRENGTH;
+            var translatedHand = hand.chars().mapToObj(strengths::get).toList();
+            var counts = (jokers) ? getCountsForJokers(translatedHand) : getCounts(translatedHand);
             int handType = determineHandType(counts);
 
             return encodeHand(handType, translatedHand);
+        }
+
+        private static Map<Integer, Long> getCounts(List<Integer> hand) {
+            return hand.stream()
+                    .collect(Collectors.groupingBy(v -> v, Collectors.counting()));
+        }
+
+        private static Map<Integer, Long> getCountsForJokers(List<Integer> hand) {
+            List<Integer> nonJokers = hand.stream().filter(c -> !c.equals(0)).toList();
+            int jokerCount = hand.size() - nonJokers.size();
+
+            if (jokerCount == 5) return Map.of((int) 'J', 5L);
+
+            var counts = getCounts(nonJokers);
+            Integer maxKey = counts.entrySet().stream()
+                    .max(Map.Entry.comparingByValue())
+                    .map(Map.Entry::getKey)
+                    .orElse(0);
+
+            return counts.entrySet().stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            entry -> entry.getKey().equals(maxKey) ? entry.getValue() + jokerCount : entry.getValue()
+                    ));
         }
 
         private static int encodeHand(int handType, List<Integer> hand) {
@@ -86,12 +115,15 @@ public class Day07 extends AOCPuzzle {
             }
         }
 
-        static Hand from(String line) {
+        static Hand from(String line, boolean jokers) {
             var inputTokens = line.split("\\s+");
-            return new Hand(inputTokens[0], Integer.parseInt(inputTokens[1]), getRankHash(inputTokens[0]));
+            return new Hand(inputTokens[0], Integer.parseInt(inputTokens[1]), getRankHash(inputTokens[0], jokers));
         }
 
         static final Map<Integer, Integer> CARD_STRENGTH = IntStream.range(0, 13).boxed()
                 .collect(Collectors.toMap(i -> (int) "23456789TJQKA".charAt(i), i -> i));
+
+        static final Map<Integer, Integer> CARD_STRENGTH_JOKERS = IntStream.range(0, 13).boxed()
+                .collect(Collectors.toMap(i -> (int) "J23456789TQKA".charAt(i), i -> i));
     }
 }
