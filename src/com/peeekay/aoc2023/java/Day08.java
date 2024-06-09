@@ -33,18 +33,31 @@ public class Day08 extends AOCPuzzle {
                 .map(Node::from)
                 .collect(Collectors.toMap(n -> n.name, n -> n));
 
-        _part1 = stepCount(nodes, instructions, "AAA", "ZZZ");
+        _part1 = stepCount(nodes, instructions, "AAA", "Z");
 
-        _part2 = inp.stream();
+        _part2 = nodes.values().stream()
+                .filter(n -> n.name.endsWith("A"))
+                .mapToLong(n -> stepCount(nodes, instructions, n.name, "Z"))
+                .reduce((acc, c) -> lcm(c, acc))
+                .orElse(0);
 
+    }
 
+    static long gcd(long a, long b) {
+        if (b == 0) {
+            return a;
+        }
+        return gcd(b, a % b);
+    }
 
+    static long lcm(long a, long b) {
+        return (a * b) / gcd(a, b);
     }
 
     private long stepCount(Map<String, Node> nodes, char[] instructions, String start, String end) {
         int count = 0;
         String current = start;
-        while (!current.equals(end)) {
+        while (!current.endsWith(end)) {
             var instruction = instructions[count++ % instructions.length];
             current = (instruction == 'L') ? nodes.get(current).left : nodes.get(current).right;
         }
