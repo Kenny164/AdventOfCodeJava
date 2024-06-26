@@ -29,9 +29,10 @@ public class Day09 extends AOCPuzzle {
     void solve(List<String> inp) {
         var histories = inp.stream()
                 .map(line -> Arrays.stream(line.split(" "))
-                        .map(Integer::parseInt).toList());
+                        .map(Integer::parseInt).toList())
+                .toList();
 
-        _part1 = histories
+        _part1 = histories.stream()
                 .mapToInt(hist -> Stream.iterate(hist,
                                 prediction -> !prediction.stream().allMatch(v -> v == 0),
                                 prediction -> IntStream.range(1, prediction.size())
@@ -41,10 +42,14 @@ public class Day09 extends AOCPuzzle {
                         .sum())
                 .sum();
 
-        _part2 = 0L;
-
-
+        _part2 = histories.stream()
+                .mapToInt(hist -> Stream.iterate(hist,
+                                prediction -> !prediction.stream().allMatch(v -> v == 0),
+                                prediction -> IntStream.range(1, prediction.size())
+                                        .mapToObj(i -> prediction.get(i - 1) - prediction.get(i))
+                                        .toList())
+                        .mapToInt(prediction -> prediction.get(0))
+                        .sum())
+                .sum();
     }
-
-
 }
