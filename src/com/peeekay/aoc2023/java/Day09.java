@@ -27,29 +27,46 @@ public class Day09 extends AOCPuzzle {
     }
 
     void solve(List<String> inp) {
-        var histories = inp.stream()
+        List<List<Integer>> histories = inp.stream()
                 .map(line -> Arrays.stream(line.split(" "))
-                        .map(Integer::parseInt).toList())
+                        .mapToInt(Integer::parseInt)
+                        .boxed()
+                        .toList())
                 .toList();
 
-        _part1 = histories.stream()
-                .mapToInt(hist -> Stream.iterate(hist,
-                                prediction -> !prediction.stream().allMatch(v -> v == 0),
-                                prediction -> IntStream.range(1, prediction.size())
-                                        .mapToObj(i -> prediction.get(i) - prediction.get(i - 1))
-                                        .toList())
-                        .mapToInt(prediction -> prediction.get(prediction.size() - 1))
-                        .sum())
-                .sum();
+        _part1 = calculatePart1(histories);
+        _part2 = calculatePart2(histories);
+    }
 
-        _part2 = histories.stream()
-                .mapToInt(hist -> Stream.iterate(hist,
-                                prediction -> !prediction.stream().allMatch(v -> v == 0),
-                                prediction -> IntStream.range(1, prediction.size())
-                                        .mapToObj(i -> prediction.get(i - 1) - prediction.get(i))
-                                        .toList())
-                        .mapToInt(prediction -> prediction.get(0))
-                        .sum())
+    private long calculatePart1(List<List<Integer>> histories) {
+        return histories.stream()
+                .mapToLong(this::calculateFinalDifference)
+                .sum();
+    }
+
+    private long calculatePart2(List<List<Integer>> histories) {
+        return histories.stream()
+                .mapToLong(this::calculateInitialDifference)
+                .sum();
+    }
+
+    private long calculateFinalDifference(List<Integer> history) {
+        return Stream.iterate(history,
+                        prediction -> !prediction.stream().allMatch(v -> v == 0),
+                        prediction -> IntStream.range(1, prediction.size())
+                                .mapToObj(i -> prediction.get(i) - prediction.get(i - 1))
+                                .toList())
+                .mapToInt(prediction -> prediction.get(prediction.size() - 1))
+                .sum();
+    }
+
+    private long calculateInitialDifference(List<Integer> history) {
+        return Stream.iterate(history,
+                        prediction -> !prediction.stream().allMatch(v -> v == 0),
+                        prediction -> IntStream.range(1, prediction.size())
+                                .mapToObj(i -> prediction.get(i - 1) - prediction.get(i))
+                                .toList())
+                .mapToInt(prediction -> prediction.get(0))
                 .sum();
     }
 }
