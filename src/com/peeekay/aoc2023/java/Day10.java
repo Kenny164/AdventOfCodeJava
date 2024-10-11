@@ -3,7 +3,10 @@ package com.peeekay.aoc2023.java;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Day10 extends AOCPuzzle {
@@ -30,28 +33,38 @@ public class Day10 extends AOCPuzzle {
     void solve(List<String> inp) {
         var g = new Grid(String.join("", inp), inp.get(0).length(), inp.size());
         var pos = g.findFirst('S');
+        AtomicBoolean inside = new AtomicBoolean(false);
 
-        record State(Pos pos, Dir dir, int steps) {}
+        var pipes = Stream.iterate(
+                new State(pos, Arrays.stream(Dir.values())
+                        .filter(d -> g.in(pos.next(d)))
+                        .filter(d -> PIPE_MAP.getOrDefault(g.at(pos.next(d)), null).apply(d) != null)
+                        .findFirst()
+                        .orElseThrow(), 0),
+                state -> g.at(state.pos) != 'S' || state.steps == 0,
+                state -> {
+                    var newPos = state.pos.next(state.dir);
+                    var newSymbol = g.at(newPos);
+                    var newDir = PIPE_MAP.getOrDefault(newSymbol, d -> null).apply(state.dir);
+                    return new State(newPos, newDir, state.steps + 1);
+                }
+        ).collect(Collectors.toMap(State::pos, state -> state));
 
-        _part1 = Stream.iterate(
-                        new State(pos, Arrays.stream(Dir.values())
-                                .filter(d -> g.in(pos.next(d)))
-                                .filter(d -> PIPE_MAP.getOrDefault(g.at(pos.next(d)), null).apply(d) != null)
-                                .findFirst()
-                                .orElseThrow(), 0),
-                        state -> g.at(state.pos) != 'S' || state.steps == 0,
-                        state -> {
-                            var newPos = state.pos.next(state.dir);
-                            var newSymbol = g.at(newPos);
-                            var newDir = PIPE_MAP.getOrDefault(newSymbol, d -> null).apply(state.dir);
-                            return new State(newPos, newDir, state.steps + 1);
-                        }
-                )
-                .reduce((a, b) -> b)
-                .map(state -> (state.steps / 2) + (state.steps % 2))
-                .orElseThrow();
-        _part2 = 0L;
+        _part1 = pipes.size() / 2;
+
+        _part2 = IntStream.range(0, g.data.length()).filter( ci -> {
+            var c = g.data.charAt(ci);
+            if (pipes.containsKey(g.pos(ci))) {
+                if (c == '|' || c == 'L' || c == 'J') {
+                    inside.set(!inside.get());
+                }
+                return false;
+            }
+            return inside.get();
+        }).count();
     }
+
+    record State(Pos pos, Dir dir, int steps) {}
 
     record Pos(int x, int y) {
         Pos next(Dir dir) {
@@ -76,6 +89,10 @@ public class Day10 extends AOCPuzzle {
 
         char at(Pos pos) {
             return data.charAt(pos.x + pos.y * width);
+        }
+
+        Pos pos(int index) {
+            return new Pos(index % width, index / width);
         }
 
         Pos findFirst(char c) {
