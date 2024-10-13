@@ -28,10 +28,7 @@ public class Day11 extends AOCPuzzle {
     }
 
     void solve(List<String> inp) {
-        var galaxies = expandGalaxies(inp, 1);
-        var minDistances = getTaxiCabDistances(galaxies);
-
-        _part1 = minDistances.stream().mapToLong(Long::longValue).sum();
+        _part1 = getTaxiCabDistances(expandGalaxies(inp, 1)).stream().mapToLong(Long::longValue).sum();
         _part2 = getTaxiCabDistances(expandGalaxies(inp, 999_999)).stream().mapToLong(Long::longValue).sum();
     }
 
