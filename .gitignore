@@ -1,5 +1,10 @@
 .gradle/
 .idea/
+.kotlin/
 lib/
 out/
+build/
+**/kotlin/build/
+**/java/build/
+**/resources/inputs/*.txt
 *.iml
