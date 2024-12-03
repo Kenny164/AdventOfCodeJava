@@ -20,7 +20,7 @@ internal class Day02Test {
         val day = Day02(isTest = true)
         val answer = day.partTwo()
 
-        assertEquals(0, answer)
+        assertEquals(4, answer)
     }
 
 }
