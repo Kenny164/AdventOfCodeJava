@@ -26,8 +26,6 @@ public abstract class AOCPuzzle {
 
     public abstract Object part2();
 
-    public abstract void solve();
-
     public void printParts() {
         System.out.println("Part 1: " + part1());
         System.out.println("Part 2: " + part2());

@@ -7,8 +7,6 @@ public class Main
     public static void main(String[] args)
     {
         AOCPuzzle day = new Day04(false);
-        //day.pullInputFromAOC();
-        day.solve();
         day.printParts();
     }
 }

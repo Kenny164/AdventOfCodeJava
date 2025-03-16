@@ -8,13 +8,11 @@ class Day04Test {
 
     @Test
     void part1() {
-        day.solve();
         Assertions.assertEquals(18, day.part1());
     }
 
     @Test
     void part2() {
-        day.solve();
         Assertions.assertEquals(9, day.part2());
     }
 }
