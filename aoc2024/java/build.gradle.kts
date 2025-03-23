@@ -27,11 +27,11 @@ tasks.test {
     useJUnitPlatform()
 }
 
-sourceSets {
-    main {
-        resources.srcDirs(
-            "src/main/resources",
-            "../resources"
-        )
-    }
-}
+//sourceSets {
+//    main {
+//        resources.srcDirs(
+//            "src/main/resources",
+//            "../resources"
+//        )
+//    }
+//}

@@ -31,7 +31,7 @@ public abstract class AOCPuzzle {
         System.out.println("Part 2: " + part2());
     }
 
-    String getResourceAsString() {
+    protected String getResourceAsString() {
         String path = (isTest) ? "/input/%04d/day%02d_test.txt" : "/input/%04d/day%02d.txt";
         path = String.format(path, year, dayNum);
 
@@ -50,7 +50,7 @@ public abstract class AOCPuzzle {
         }
     }
 
-    List<String> resourceAsSplitText (String splitOn) {
+    protected List<String> resourceAsSplitText (String splitOn) {
         return List.of(getResourceAsString().split(splitOn));
     }
 
