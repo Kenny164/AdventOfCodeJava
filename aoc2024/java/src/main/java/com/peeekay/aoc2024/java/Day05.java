@@ -24,36 +24,50 @@ public class Day05 extends AOCPuzzle {
 
     @Override
     public Object part1() {
-        var total = 0;
-        for (var update : getValidUpdates()) {
-            total += update.get(update.size() / 2);
-        }
-        return total;
+        return pages.stream()
+                .filter(this::isValid)
+                .map(this::getListMidPoint)
+                .mapToInt(Integer::intValue)
+                .sum();
     }
 
-    private List<List<Integer>> getValidUpdates() {
-        List<List<Integer>> validUpdates = new ArrayList<>();
-        for (var update : pages) {
-            boolean isValid = true;
-            for (var i = update.size() - 1; i >= 0 && isValid ; i-- ) {
-                var page = update.get(i);
-                var ruleSet = rules.getOrDefault(page, Set.of());
-                for (var j = 0; j < i; j++) {
-                    if (ruleSet.contains(update.get(j))) {
-                        isValid = false;
-                        break;
-                    }
+    private Integer getListMidPoint(List<Integer> inList) {
+        return inList.get(inList.size() / 2);
+    }
+
+    private boolean isValid(List<Integer> update) {
+        boolean isValid = true;
+        for (var i = update.size() - 1; i >= 0 && isValid ; i-- ) {
+            var page = update.get(i);
+            var ruleSet = rules.getOrDefault(page, Set.of());
+            for (var j = 0; j < i; j++) {
+                if (ruleSet.contains(update.get(j))) {
+                    isValid = false;
+                    break;
                 }
             }
-            if (isValid) {
-                validUpdates.add(update);
-            }
         }
-        return validUpdates;
+        return isValid;
     }
 
     @Override
     public Object part2() {
-        return pages;
+        return pages.stream()
+                .filter(update -> !isValid(update))
+                .map(update -> update.stream().sorted(comparedValid()).toList())
+                .map(this::getListMidPoint)
+                .mapToInt(Integer::intValue)
+                .sum();
+    }
+
+    private Comparator<Integer> comparedValid() {
+        return (a, b) -> {
+            if (rules.getOrDefault(a, Set.of()).contains(b)) {
+                return -1;
+            } else if (rules.getOrDefault(b, Set.of()).contains(a)) {
+                return 1;
+            }
+            return 0;
+        };
     }
 }
