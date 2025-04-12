@@ -15,6 +15,8 @@ public abstract class AOCPuzzle {
     private long timerStart;
     private final boolean isTest;
 
+    protected static final StringBuilder SB_INSTANCE = new StringBuilder();
+
     public AOCPuzzle(int year, int day, boolean isTest) {
         this.year = year;
         this.dayNum = day;

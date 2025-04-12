@@ -4,10 +4,17 @@ import com.peeekay.aocCommon.AOCPuzzle;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.LongBinaryOperator;
 
 public class Day07 extends AOCPuzzle {
     List<SingleEquation> inp;
-    StringBuilder SB = new StringBuilder();
+
+    private static final LongBinaryOperator ADD = Long::sum;
+    private static final LongBinaryOperator MULTIPLY = (a, b) -> a * b;
+    private static final LongBinaryOperator CONCAT = Day07::concatOp;
+
+    private static final List<LongBinaryOperator> PART1_OPS = List.of(ADD, MULTIPLY);
+    private static final List<LongBinaryOperator> PART2_OPS = List.of(ADD, MULTIPLY, CONCAT);
 
     record SingleEquation(long testVal, List<Long> numbers) {
         static SingleEquation from(String line) {
@@ -24,70 +31,41 @@ public class Day07 extends AOCPuzzle {
         inp = this.resourceAsList().stream().map(SingleEquation::from).toList();
     }
 
+    static long concatOp(long a, long b) {
+        SB_INSTANCE.setLength(0);
+        SB_INSTANCE.append(a).append(b);
+        return Long.parseLong(SB_INSTANCE.toString());
+    }
+
+    boolean canCalibrate(SingleEquation singleEquation, long acc, List<Long> remaining, List<LongBinaryOperator> allowedOps) {
+        if (remaining.isEmpty()) {
+            return acc == singleEquation.testVal;
+        }
+        if (acc > singleEquation.testVal) {
+            return false;
+        }
+        long number = remaining.getFirst();
+        return allowedOps.stream()
+                .anyMatch(op ->
+                        canCalibrate(singleEquation,
+                                op.applyAsLong(acc, number),
+                                remaining.subList(1, remaining.size()),
+                                allowedOps));
+    }
+
     @Override
     public Object part1() {
         return inp.stream()
-                .filter(se -> canCalibrate(se, 0L, se.numbers))
+                .filter(se -> canCalibrate(se, 0L, se.numbers, PART1_OPS))
                 .map(e -> e.testVal)
                 .reduce(Long::sum)
                 .orElse(0L);
     }
 
-    boolean canCalibrate(SingleEquation singleEquation, long acc, List<Long> remaining) {
-        if (remaining.isEmpty()) {
-            return acc == singleEquation.testVal;
-        }
-        else if (acc > singleEquation.testVal) {
-            return false;
-        }
-        else {
-            long number = remaining.getFirst();
-            if (canCalibrate(singleEquation, acc + number, remaining.subList(1, remaining.size()))) {
-                return true;
-            }
-            else if (canCalibrate(singleEquation, acc * number, remaining.subList(1, remaining.size()))) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-    }
-
-    boolean canCalibrate2(SingleEquation singleEquation, long acc, List<Long> remaining) {
-        if (remaining.isEmpty()) {
-            return acc == singleEquation.testVal;
-        }
-        else if (acc > singleEquation.testVal) {
-            return false;
-        }
-        else {
-            long number = remaining.getFirst();
-            if (canCalibrate2(singleEquation, acc + number, remaining.subList(1, remaining.size()))) {
-                return true;
-            }
-            else if (canCalibrate2(singleEquation, acc * number, remaining.subList(1, remaining.size()))) {
-                return true;
-            }
-            else if (canCalibrate2(singleEquation, concatOp(acc, number), remaining.subList(1, remaining.size()))) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-    }
-
-    private long concatOp (long a, long b) {
-        SB.setLength(0);
-        SB.append(a).append(b);
-        return Long.parseLong(SB.toString());
-    }
-
     @Override
     public Object part2() {
         return inp.stream()
-                .filter(se -> canCalibrate2(se, 0L, se.numbers))
+                .filter(se -> canCalibrate(se, 0L, se.numbers, PART2_OPS))
                 .map(e -> e.testVal)
                 .reduce(Long::sum)
                 .orElse(0L);
