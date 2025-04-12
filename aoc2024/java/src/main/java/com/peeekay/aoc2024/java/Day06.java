@@ -38,7 +38,7 @@ public class Day06 extends AOCPuzzle {
         }
     }
     record Dir(int dx, int dy) { }
-    record Guard(Pos pos, Dir dir, int turns) { }
+    record Guard(Pos pos, int dir) { }
 
     public Day06(boolean isTest) {
         super(2024, 6, isTest);
@@ -49,32 +49,58 @@ public class Day06 extends AOCPuzzle {
 
     @Override
     public Object part1() {
-        List<Pos> path = getGuardPath();
-        return path.stream()
+        return getGuardPath().stream()
+                .mapToInt(g -> g.pos.x * grid.width + g.pos.y)
                 .distinct()
                 .count();
     }
 
-    private List<Pos> getGuardPath() {
-        List<Pos> path = new ArrayList<>();
-        Guard guard = new Guard(grid.findFirst('^'), DIRECTIONS.getFirst(), 0);
+    private List<Guard> getGuardPath() {
+        List<Guard> path = new ArrayList<>();
+        Guard guard = new Guard(grid.findFirst('^'), 0);
         for (;;) {
-            path.add(guard.pos);
-            Pos nextStep = guard.pos.next(guard.dir);
+            path.add(guard);
+            Pos nextStep = guard.pos.next(DIRECTIONS.get(guard.dir));
             if (!grid.in(nextStep)) {
                 break;
             }
             if (grid.at(nextStep) == '#') {
-                guard = new Guard(guard.pos, DIRECTIONS.get((guard.turns + 1) % 4), guard.turns + 1);
+                guard = new Guard(guard.pos, (guard.dir + 1) % 4);
             } else {
-                guard = new Guard(nextStep, DIRECTIONS.get(guard.turns % 4), guard.turns);
+                guard = new Guard(nextStep, guard.dir);
             }
         }
         return path;
     }
 
+    private boolean willLoop(Guard guard, Pos obstacle) {
+        Set<Guard> history = new HashSet<>();
+        for (;;) {
+            Pos nextStep = guard.pos.next(DIRECTIONS.get(guard.dir));
+            if (history.contains(guard)) {
+                return true;
+            }
+            history.add(guard);
+            if (!grid.in(nextStep)) {
+                return false;
+            }
+            if (grid.at(nextStep) == '#' || nextStep.equals(obstacle)) {
+                guard = new Guard(guard.pos, (guard.dir + 1) % 4);
+            } else {
+                guard = new Guard(nextStep, guard.dir);
+            }
+        }
+    }
+
     @Override
     public Object part2() {
-        return null;
+        List<Guard> guardPath = getGuardPath();
+        Guard guardInit = guardPath.removeFirst();
+
+        return guardPath.stream()
+                .map(guard -> guard.pos)
+                .distinct()
+                .filter(obs -> willLoop(new Guard(guardInit.pos, guardInit.dir), obs))
+                .count();
     }
 }

@@ -13,6 +13,6 @@ class Day06Test {
 
     @Test
     void part2() {
-        Assertions.assertEquals(0, day.part2());
+        Assertions.assertEquals(6L, day.part2());
     }
 }
