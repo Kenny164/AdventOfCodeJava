@@ -7,6 +7,7 @@ import java.util.*;
 public class Day08 extends AOCPuzzle {
     Map<Character, List<Pos>> antennas = new HashMap<>();
     Set<Pos> antiNodes = new HashSet<>();
+    Set<Pos> antiNodesPart2 = new HashSet<>();
     Grid grid;
 
     record Pos(int x, int y) { }
@@ -28,7 +29,6 @@ public class Day08 extends AOCPuzzle {
         char[][] inp = this.resourceAsList().stream().map(String::toCharArray).toArray(char[][]::new);
         this.grid = Grid.from(inp);
         populateAntennas();
-        populateAntiNodes();
     }
 
     private void populateAntennas() {
@@ -59,13 +59,32 @@ public class Day08 extends AOCPuzzle {
         }
     }
 
+    private void populateAntiNodesPart2() {
+        for (char c : antennas.keySet()) {
+            List<Pos> antList = antennas.get(c);
+            for (Pos a : antList) {
+                for (Pos b : antList) {
+                    if (a.equals(b)) {continue;}
+                    Pos diff = new Pos(-(a.x - b.x), -(a.y - b.y));
+                    Pos line = new Pos(b.x, b.y);
+                    while (grid.in(line)) {
+                        antiNodesPart2.add(line);
+                        line = new Pos(line.x + diff.x, line.y + diff.y);
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public Object part1() {
+        populateAntiNodes();
         return antiNodes.size();
     }
 
     @Override
     public Object part2() {
-        return 0;
+        populateAntiNodesPart2();
+        return antiNodesPart2.size();
     }
 }
