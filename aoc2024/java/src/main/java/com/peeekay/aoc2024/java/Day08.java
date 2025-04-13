@@ -1,13 +1,16 @@
 package com.peeekay.aoc2024.java;
 
 import com.peeekay.aocCommon.AOCPuzzle;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
 
 public class Day08 extends AOCPuzzle {
     Map<Character, List<Pos>> antennas = new HashMap<>();
-    Set<Pos> antiNodes = new HashSet<>();
-    Set<Pos> antiNodesPart2 = new HashSet<>();
     Grid grid;
 
     record Pos(int x, int y) { }
@@ -44,47 +47,42 @@ public class Day08 extends AOCPuzzle {
         }
     }
 
-    private void populateAntiNodes() {
+    private Set<Pos> getAntiNodes(boolean isPart2) {
+        Set<Pos> antiNodes = new HashSet<>();
         for (char c : antennas.keySet()) {
             List<Pos> antList = antennas.get(c);
             for (Pos a : antList) {
                 for (Pos b : antList) {
-                    if (a.equals(b)) {continue;}
-                    Pos antiNode = new Pos(-(a.x - b.x) + b.x, -(a.y - b.y) + b.y);
-                    if (grid.in(antiNode)) {
-                        antiNodes.add(antiNode);
+                    if (a.equals(b)) {
+                        continue;
                     }
-                }
-            }
-        }
-    }
-
-    private void populateAntiNodesPart2() {
-        for (char c : antennas.keySet()) {
-            List<Pos> antList = antennas.get(c);
-            for (Pos a : antList) {
-                for (Pos b : antList) {
-                    if (a.equals(b)) {continue;}
                     Pos diff = new Pos(-(a.x - b.x), -(a.y - b.y));
                     Pos line = new Pos(b.x, b.y);
-                    while (grid.in(line)) {
-                        antiNodesPart2.add(line);
+                    if (!isPart2) {
                         line = new Pos(line.x + diff.x, line.y + diff.y);
+                        if(grid.in(line)) {
+                            antiNodes.add(line);
+                        }
+                    }
+                    else {
+                        while (grid.in(line)) {
+                            antiNodes.add(line);
+                            line = new Pos(line.x + diff.x, line.y + diff.y);
+                        }
                     }
                 }
             }
         }
+        return antiNodes;
     }
 
     @Override
     public Object part1() {
-        populateAntiNodes();
-        return antiNodes.size();
+        return getAntiNodes(false).size();
     }
 
     @Override
     public Object part2() {
-        populateAntiNodesPart2();
-        return antiNodesPart2.size();
+        return getAntiNodes(true).size();
     }
 }
