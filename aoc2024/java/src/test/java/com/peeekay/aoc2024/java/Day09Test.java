@@ -8,7 +8,7 @@ class Day09Test {
 
     @Test
     void part1() {
-        Assertions.assertEquals(14, day.part1());
+        Assertions.assertEquals(1928L, day.part1());
     }
 
     @Test
