@@ -4,7 +4,8 @@ plugins {
 }
 
 rootProject.name = "AdventOfCodeJava"
-include(":aoc2020:java", ":aoc2020:kotlin",
+include(":aoc2015:java",
+    ":aoc2020:java", ":aoc2020:kotlin",
     ":aoc2021:kotlin",
     ":aoc2022:java", ":aoc2022:kotlin",
     ":aoc2023:java",
