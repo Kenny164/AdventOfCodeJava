@@ -36,6 +36,16 @@ public class Day08 extends AOCPuzzle {
 
     @Override
     public Object part2() {
-        return 0;
+        return inp.stream()
+                .map(s -> {
+                    int encodedChars = 0;
+                    for (int i = 0; i < s.length(); i++) {
+                        if (s.charAt(i) == '\\' || s.charAt(i) == '\"') {
+                            encodedChars++;
+                        }
+                    }
+                    return 2 + encodedChars;
+                })
+                .reduce(0, Integer::sum);
     }
 }
