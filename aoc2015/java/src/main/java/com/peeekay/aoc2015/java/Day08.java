@@ -19,15 +19,12 @@ public class Day08 extends AOCPuzzle {
                     for (int i = 1; i < s.length() - 1; i++) {
                         if (s.charAt(i) == '\\') {
                             if (s.charAt(i + 1) == 'x') {
-                                encodedChars++;
                                 i += 3;
                             } else {
-                                encodedChars++;
                                 i++;
                             }
-                        } else {
-                            encodedChars++;
                         }
+                        encodedChars++;
                     }
                     return s.length() - encodedChars;
                 })
