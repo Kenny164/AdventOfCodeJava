@@ -20,29 +20,19 @@ public class Day09 extends AOCPuzzle {
     @Override
     public Object part1() {
         List<List<String>> paths = getPermutations(cities.stream().toList());
-        int shortestDistance = Integer.MAX_VALUE;
-        for (List<String> path : paths) {
-            int distance = 0;
-            for (var i = 0; i < path.size() - 1; i++) {
-                distance += inp.getOrDefault(String.format("%s_%s", path.get(i), path.get(i + 1)), 0);
-            }
-            shortestDistance = Math.min(shortestDistance, distance);
-        }
-        return shortestDistance;
+        return paths.stream()
+                .mapToInt(this::getDistances)
+                .min()
+                .orElse(0);
     }
 
     @Override
     public Object part2() {
         List<List<String>> paths = getPermutations(cities.stream().toList());
-        int LongestDistance = Integer.MIN_VALUE;
-        for (List<String> path : paths) {
-            int distance = 0;
-            for (var i = 0; i < path.size() - 1; i++) {
-                distance += inp.getOrDefault(String.format("%s_%s", path.get(i), path.get(i + 1)), 0);
-            }
-            LongestDistance = Math.max(LongestDistance, distance);
-        }
-        return LongestDistance;
+        return paths.stream()
+                .mapToInt(this::getDistances)
+                .max()
+                .orElse(0);
     }
 
     void parseInput(List<String> lines) {
@@ -76,5 +66,13 @@ public class Day09 extends AOCPuzzle {
         }
 
         return permutations;
+    }
+
+    private int getDistances(List<String> path) {
+        int distance = 0;
+        for (var i = 0; i < path.size() - 1; i++) {
+            distance += inp.getOrDefault(String.format("%s_%s", path.get(i), path.get(i + 1)), 0);
+        }
+        return distance;
     }
 }
