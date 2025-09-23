@@ -33,7 +33,16 @@ public class Day09 extends AOCPuzzle {
 
     @Override
     public Object part2() {
-        return 0;
+        List<List<String>> paths = getPermutations(cities.stream().toList());
+        int LongestDistance = Integer.MIN_VALUE;
+        for (List<String> path : paths) {
+            int distance = 0;
+            for (var i = 0; i < path.size() - 1; i++) {
+                distance += inp.getOrDefault(String.format("%s_%s", path.get(i), path.get(i + 1)), 0);
+            }
+            LongestDistance = Math.max(LongestDistance, distance);
+        }
+        return LongestDistance;
     }
 
     void parseInput(List<String> lines) {
