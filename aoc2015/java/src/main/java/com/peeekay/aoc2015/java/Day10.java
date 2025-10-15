@@ -3,9 +3,6 @@ package com.peeekay.aoc2015.java;
 import com.peeekay.aocCommon.AOCPuzzle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Day10 extends AOCPuzzle {
     String inp = this.getResourceAsString().trim();
@@ -30,11 +27,10 @@ public class Day10 extends AOCPuzzle {
         return result;
     }
 
-    @Override
-    public Object part1() {
+    private String applyLookAndSay(int x) {
         String result = inp;
         StringBuilder sb = new StringBuilder();
-        for (var i = 0; i < 40; i++) {
+        for (var i = 0; i < x; i++) {
             var groupings = groupStringByCharCount(result);
             sb.setLength(0);
             for (String grouping : groupings) {
@@ -42,21 +38,18 @@ public class Day10 extends AOCPuzzle {
             }
             result = sb.toString();
         }
+        return result;
+    }
+
+    @Override
+    public Object part1() {
+        String result = applyLookAndSay(40);
         return result.length();
     }
 
     @Override
     public Object part2() {
-        String result = inp;
-        StringBuilder sb = new StringBuilder();
-        for (var i = 0; i < 50; i++) {
-            var groupings = groupStringByCharCount(result);
-            sb.setLength(0);
-            for (String grouping : groupings) {
-                sb.append(grouping.length()).append(grouping.charAt(0));
-            }
-            result = sb.toString();
-        }
+        String result = applyLookAndSay(50);
         return result.length();
     }
 }
