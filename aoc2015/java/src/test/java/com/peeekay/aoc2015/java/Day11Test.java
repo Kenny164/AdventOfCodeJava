@@ -8,8 +8,37 @@ class Day11Test {
     final AOCPuzzle day = new Day11(true);
 
     @Test
+    void test_hasThreeStraight() {
+        Assertions.assertTrue(Day11.hasThreeStraight("hijklmmn"));
+        Assertions.assertTrue(Day11.hasThreeStraight("asdfabct"));
+        Assertions.assertFalse(Day11.hasThreeStraight("hiajkbcn"));
+    }
+
+    @Test
+    void test_hasConfusingLetters() {
+        Assertions.assertFalse(Day11.hasConfusingLetters("hijklmmn"));
+        Assertions.assertTrue(Day11.hasConfusingLetters("asdfabct"));
+        Assertions.assertFalse(Day11.hasConfusingLetters("hlajkbcn"));
+    }
+
+    @Test
+    void test_matchingPairs() {
+        Assertions.assertEquals(1, Day11.matchingPairs("hijklmmn"));
+        Assertions.assertEquals(2, Day11.matchingPairs("asddabbt"));
+        Assertions.assertEquals(3, Day11.matchingPairs("hhabbkcc"));
+    }
+
+    @Test
+    void test_incrementString() {
+        Assertions.assertEquals("xy", Day11.incrementString("xx"));
+        Assertions.assertEquals("ya", Day11.incrementString("xz"));
+        Assertions.assertEquals("hijklmmo", Day11.incrementString("hijklmmn"));
+        Assertions.assertEquals("hijklmna", Day11.incrementString("hijklmmz"));
+    }
+
+    @Test
     void part1() {
-        Assertions.assertEquals(0, day.part1());
+        Assertions.assertEquals("abcdffaa", day.part1());
     }
 
     @Test
