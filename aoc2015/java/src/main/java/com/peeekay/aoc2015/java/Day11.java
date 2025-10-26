@@ -3,10 +3,11 @@ package com.peeekay.aoc2015.java;
 import com.peeekay.aocCommon.AOCPuzzle;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class Day11 extends AOCPuzzle {
     private static final Set<Character> CONFUSING_LETTERS = Set.of('i', 'o', 'l');
-    String inp = this.getResourceAsString();
+    String inp = this.getResourceAsString().trim();
 
     public Day11(boolean isTest) {
         super(2015, 11, isTest);
@@ -69,17 +70,18 @@ public class Day11 extends AOCPuzzle {
         return new String(newChars);
     }
 
+    private Stream<String> passwordGenerator(String startingPassword) {
+        return Stream.iterate(startingPassword, Day11::incrementString)
+                .filter(pw -> hasThreeStraight(pw) && !hasConfusingLetters(pw) && matchingPairs(pw) >= 2);
+    }
+
     @Override
     public Object part1() {
-        var result = inp.trim();
-        do {
-            result = incrementString(result);
-        } while (!hasThreeStraight(result) || hasConfusingLetters(result) || matchingPairs(result) < 2);
-        return result;
+        return passwordGenerator(inp).findFirst().orElse("");
     }
 
     @Override
     public Object part2() {
-        return 0;
+        return passwordGenerator(inp).skip(1).findFirst().orElse("");
     }
 }

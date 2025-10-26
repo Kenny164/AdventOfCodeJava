@@ -16,9 +16,9 @@ class Day11Test {
 
     @Test
     void test_hasConfusingLetters() {
-        Assertions.assertFalse(Day11.hasConfusingLetters("hijklmmn"));
-        Assertions.assertTrue(Day11.hasConfusingLetters("asdfabct"));
-        Assertions.assertFalse(Day11.hasConfusingLetters("hlajkbcn"));
+        Assertions.assertTrue(Day11.hasConfusingLetters("hijklmmn"));
+        Assertions.assertFalse(Day11.hasConfusingLetters("asdfabct"));
+        Assertions.assertTrue(Day11.hasConfusingLetters("hlajkbcn"));
     }
 
     @Test
@@ -43,6 +43,6 @@ class Day11Test {
 
     @Test
     void part2() {
-        Assertions.assertEquals(0, day.part2());
+        Assertions.assertEquals("abcdffbb", day.part2());
     }
 }
