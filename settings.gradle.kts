@@ -9,5 +9,6 @@ include(":aoc2015:java",
     ":aoc2021:kotlin",
     ":aoc2022:java", ":aoc2022:kotlin",
     ":aoc2023:java",
-    ":aoc2024:kotlin", ":aoc2024:java")
+    ":aoc2024:kotlin", ":aoc2024:java",
+    ":aoc2025:java")
 include(":aocCommon")
