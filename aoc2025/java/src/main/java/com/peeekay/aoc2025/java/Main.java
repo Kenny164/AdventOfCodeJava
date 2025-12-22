@@ -6,7 +6,7 @@ public class Main
 {
     public static void main(String[] args)
     {
-        AOCPuzzle day = new Day01(false);
+        AOCPuzzle day = new Day02(false);
         day.printParts();
     }
 }
