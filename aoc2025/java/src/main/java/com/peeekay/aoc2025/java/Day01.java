@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Day01 extends AOCPuzzle {
+    private final static int MAX_COMBINATION = 100;
     List<Integer> rotations;
 
     public Day01(boolean isTest) {
@@ -16,44 +17,37 @@ public class Day01 extends AOCPuzzle {
         }).toList();
     }
 
-    List<Integer> getCombinations (int startingCombination, int maxCombination, List<Integer> rotations) {
-        int currentCombination = startingCombination;
+    static List<Integer> getCombinations (int combination, List<Integer> rotations) {
         List<Integer> result = new ArrayList<>();
         for (Integer rotation : rotations) {
-            currentCombination = rotation + currentCombination;
-            currentCombination = currentCombination < 0 ? maxCombination + currentCombination : currentCombination;
-            result.add(currentCombination % maxCombination);
+            combination = ((rotation + combination) % MAX_COMBINATION + MAX_COMBINATION) % MAX_COMBINATION;
+            result.add(combination);
         }
         return result;
     }
 
-    int getFullCombinations (int startingCombination, List<Integer> rotations) {
-        int currentCombination = startingCombination;
+    static int getFullCombinations (int combination, List<Integer> rotations) {
         int result = 0;
         for (int rotation : rotations) {
             int zeroCount;
             if (rotation > 0) {
-                zeroCount = (rotation + currentCombination) / 100;
+                zeroCount = (rotation + combination) / MAX_COMBINATION;
             } else {
-                if (currentCombination == 0) {
-                    zeroCount = -rotation / 100;
+                if (combination == 0) {
+                    zeroCount = -rotation / MAX_COMBINATION;
                 } else {
-                    zeroCount = (-rotation - currentCombination + 100) / 100;
+                    zeroCount = (-rotation - combination + MAX_COMBINATION) / MAX_COMBINATION;
                 }
             }
             result += zeroCount;
-            //System.out.printf("cur: %s, rotation: %s, zeroCount: %s%n", currentCombination, rotation, zeroCount);
-            currentCombination = rotation + currentCombination;
-            currentCombination = currentCombination < 0 ? -currentCombination % 100: currentCombination % 100;
+            combination = ((rotation + combination) % MAX_COMBINATION + MAX_COMBINATION) % MAX_COMBINATION;
         }
         return result;
     }
 
-
-
     @Override
     public Object part1() {
-        return getCombinations(50, 100, rotations).stream()
+        return getCombinations(50, rotations).stream()
                 .filter(combination -> combination == 0)
                 .count();
     }
