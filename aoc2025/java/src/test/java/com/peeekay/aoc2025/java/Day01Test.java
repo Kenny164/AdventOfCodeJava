@@ -4,7 +4,7 @@ import com.peeekay.aocCommon.AOCPuzzle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class Day01Test {
+public class Day01Test {
     final AOCPuzzle day = new Day01(true);
 
     @Test
@@ -14,6 +14,6 @@ class Day01Test {
 
     @Test
     void part2() {
-        Assertions.assertEquals(2, day.part2());
+        Assertions.assertEquals(6, day.part2());
     }
 }

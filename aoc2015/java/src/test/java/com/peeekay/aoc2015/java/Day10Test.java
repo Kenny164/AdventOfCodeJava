@@ -9,11 +9,11 @@ class Day10Test {
 
     @Test
     void part1() {
-        Assertions.assertEquals(6, day.part1());
+        Assertions.assertEquals(82350, day.part1());
     }
 
     @Test
     void part2() {
-        Assertions.assertEquals(0, day.part2());
+        Assertions.assertEquals(1166642, day.part2());
     }
 }

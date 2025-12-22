@@ -27,6 +27,30 @@ public class Day01 extends AOCPuzzle {
         return result;
     }
 
+    int getFullCombinations (int startingCombination, List<Integer> rotations) {
+        int currentCombination = startingCombination;
+        int result = 0;
+        for (int rotation : rotations) {
+            int zeroCount;
+            if (rotation > 0) {
+                zeroCount = (rotation + currentCombination) / 100;
+            } else {
+                if (currentCombination == 0) {
+                    zeroCount = -rotation / 100;
+                } else {
+                    zeroCount = (-rotation - currentCombination + 100) / 100;
+                }
+            }
+            result += zeroCount;
+            //System.out.printf("cur: %s, rotation: %s, zeroCount: %s%n", currentCombination, rotation, zeroCount);
+            currentCombination = rotation + currentCombination;
+            currentCombination = currentCombination < 0 ? -currentCombination % 100: currentCombination % 100;
+        }
+        return result;
+    }
+
+
+
     @Override
     public Object part1() {
         return getCombinations(50, 100, rotations).stream()
@@ -36,6 +60,6 @@ public class Day01 extends AOCPuzzle {
 
     @Override
     public Object part2() {
-        return 2;
+        return getFullCombinations(50, rotations);
     }
 }

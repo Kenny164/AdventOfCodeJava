@@ -14,24 +14,18 @@ java {
 
 dependencies {
     implementation(project(":aocCommon"))
-    implementation("commons-io:commons-io:2.18.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0-M1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0-M1")
+    testImplementation(platform("org.junit:junit-bom:6.1.0-M1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
 
 application {
     mainClass.set("com.peeekay.aoc2024.java.Main")
 }
-
-tasks.test {
-    useJUnitPlatform()
-}
-
-//sourceSets {
-//    main {
-//        resources.srcDirs(
-//            "src/main/resources",
-//            "../resources"
-//        )
-//    }
-//}
