@@ -14,6 +14,6 @@ public class Day03Test {
 
     @Test
     void part2() {
-        Assertions.assertEquals(0, day.part2());
+        Assertions.assertEquals(3121910778619L, day.part2());
     }
 }

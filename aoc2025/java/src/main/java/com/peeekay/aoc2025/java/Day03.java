@@ -40,6 +40,6 @@ public class Day03 extends AOCPuzzle {
 
     @Override
     public Object part2() {
-        return 0;
+        return inp.stream().mapToLong(batteries -> getJoltage(batteries, 12)).sum();
     }
 }
