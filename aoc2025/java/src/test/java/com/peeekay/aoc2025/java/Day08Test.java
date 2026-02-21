@@ -4,16 +4,16 @@ import com.peeekay.aocCommon.AOCPuzzle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class Day06Test {
-    final AOCPuzzle day = new Day06(true);
+public class Day08Test {
+    final AOCPuzzle day = new Day08(true);
 
     @Test
     void part1() {
-        Assertions.assertEquals(4_277_556L, day.part1());
+        Assertions.assertEquals(0, day.part1());
     }
 
     @Test
     void part2() {
-        Assertions.assertEquals(3_263_827L, day.part2());
+        Assertions.assertEquals(0, day.part2());
     }
 }
