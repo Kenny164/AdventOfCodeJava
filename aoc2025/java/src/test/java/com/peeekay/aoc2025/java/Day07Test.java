@@ -14,6 +14,6 @@ public class Day07Test {
 
     @Test
     void part2() {
-        Assertions.assertEquals(0, day.part2());
+        Assertions.assertEquals(40L, day.part2());
     }
 }
