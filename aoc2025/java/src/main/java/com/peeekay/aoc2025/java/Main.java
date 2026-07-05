@@ -4,9 +4,9 @@ import com.peeekay.aocCommon.AOCPuzzle;
 
 public class Main
 {
-    static void main()
+    public static void main(String[] args)
     {
-        AOCPuzzle day = new Day07(false);
+        AOCPuzzle day = new Day08(false);
         day.printParts();
     }
 }

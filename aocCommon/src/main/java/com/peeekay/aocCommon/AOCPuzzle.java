@@ -13,7 +13,7 @@ public abstract class AOCPuzzle {
     private final int year;
     private int part = 1;
     private long timerStart;
-    private final boolean isTest;
+    protected final boolean isTest;
 
     protected static final StringBuilder SB_INSTANCE = new StringBuilder();
 

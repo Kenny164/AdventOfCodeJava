@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class Day06 extends AOCPuzzle{
+public class  Day06 extends AOCPuzzle{
     private final List<String> groups;
 
     public Day06() {
