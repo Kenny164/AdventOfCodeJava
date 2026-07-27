@@ -17,10 +17,13 @@ public class Day08 extends AOCPuzzle {
             .map(Point3D::of)
             .toList();
     List<Link> links = new ArrayList<>();
+    long p1;
+    long p2;
 
     public Day08(boolean isTest) {
         super(2025, 8, isTest);
         buildLinks();
+        solve();
     }
 
     record Link(double distance, Point3D a, Point3D b) {
@@ -51,36 +54,6 @@ public class Day08 extends AOCPuzzle {
         links.sort(Comparator.comparing(Link::distance));
     }
 
-    @Override
-    public Object part1() {
-        List<Set<Point3D>> circuits = new ArrayList<>();
-        for (int i = 0; i < LIMIT; i++) {
-            var a = findFromCircuits(circuits, links.get(i).a());
-            var b = findFromCircuits(circuits, links.get(i).b());
-
-            if (a != null && b != null) {
-                if (a.equals(b)) {
-                    continue;
-                }
-                Set<Point3D> circuitToMerge = circuits.get(b);
-                circuits.get(a).addAll(circuitToMerge);
-                circuits.remove(circuitToMerge);
-            } else if (a == null && b == null) {
-                Set<Point3D> newCircuit = new HashSet<>();
-                newCircuit.add(links.get(i).a());
-                newCircuit.add(links.get(i).b());
-                circuits.add(newCircuit);
-            } else if (a != null) {
-                circuits.get(a).add(links.get(i).b());
-            } else {
-                circuits.get(b).add(links.get(i).a());
-            }
-        }
-        circuits.sort(Comparator.comparing(Set::size));
-        int lastCircuit = circuits.size()-1;
-        return circuits.get(lastCircuit).size() * circuits.get(lastCircuit-1).size() * circuits.get(lastCircuit-2).size();
-    }
-
     private Integer findFromCircuits(List<Set<Point3D>> circuits, Point3D point) {
         for (int i = 0; i < circuits.size(); i++) {
             if (circuits.get(i).contains(point)) {
@@ -91,15 +64,23 @@ public class Day08 extends AOCPuzzle {
     }
 
     @Override
+    public Object part1() {
+        return p1;
+    }
+
+    @Override
     public Object part2() {
+        return p2;
+    }
+
+    private void solve() {
         List<Set<Point3D>> circuits = new ArrayList<>();
         Set<Point3D> pointsSeen = new HashSet<>();
+        int iteration = -1;
         for (Link link : links) {
+            iteration++;
             var a = findFromCircuits(circuits, link.a());
             var b = findFromCircuits(circuits, link.b());
-
-            pointsSeen.add(link.a());
-            pointsSeen.add(link.b());
 
             if (a != null && b != null) {
                 if (a.equals(b)) {
@@ -119,10 +100,19 @@ public class Day08 extends AOCPuzzle {
                 circuits.get(b).add(link.a());
             }
 
+            pointsSeen.add(link.a());
+            pointsSeen.add(link.b());
+            
+            if (iteration == LIMIT) {
+                circuits.sort(Comparator.comparing(Set::size));
+                int lastCircuit = circuits.size() - 1;
+                p1 = (long) circuits.get(lastCircuit).size() * circuits.get(lastCircuit-1).size() * circuits.get(lastCircuit-2).size();
+            }
+
             if (pointsSeen.size() >= inp.size() && circuits.size() == 1) {
-                return (long) link.a().x() * link.b().x();
+                p2 = (long) link.a().x() * link.b().x();
+                return;
             }
         }
-        return null;
     }
 }
