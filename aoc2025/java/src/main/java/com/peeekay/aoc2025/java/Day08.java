@@ -92,6 +92,37 @@ public class Day08 extends AOCPuzzle {
 
     @Override
     public Object part2() {
-        return 0;
+        List<Set<Point3D>> circuits = new ArrayList<>();
+        Set<Point3D> pointsSeen = new HashSet<>();
+        for (Link link : links) {
+            var a = findFromCircuits(circuits, link.a());
+            var b = findFromCircuits(circuits, link.b());
+
+            pointsSeen.add(link.a());
+            pointsSeen.add(link.b());
+
+            if (a != null && b != null) {
+                if (a.equals(b)) {
+                    continue;
+                }
+                Set<Point3D> circuitToMerge = circuits.get(b);
+                circuits.get(a).addAll(circuitToMerge);
+                circuits.remove(circuitToMerge);
+            } else if (a == null && b == null) {
+                Set<Point3D> newCircuit = new HashSet<>();
+                newCircuit.add(link.a());
+                newCircuit.add(link.b());
+                circuits.add(newCircuit);
+            } else if (a != null) {
+                circuits.get(a).add(link.b());
+            } else {
+                circuits.get(b).add(link.a());
+            }
+
+            if (pointsSeen.size() >= inp.size() && circuits.size() == 1) {
+                return (long) link.a().x() * link.b().x();
+            }
+        }
+        return null;
     }
 }
